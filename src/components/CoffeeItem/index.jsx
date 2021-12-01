@@ -1,10 +1,14 @@
 import './styles.css';
 import { Button } from '../Button';
 import {Link} from 'react-router-dom';
+import CoffeeOrderContext from '../../context/coffeeOrderContext';
+import { useContext } from 'react';
 
 export const CoffeeItem = (props) => {
     
     const {image, name, type, price, size, id} = props;
+
+    const globalState = useContext(CoffeeOrderContext);
 
     return (
         <div className="coffee">

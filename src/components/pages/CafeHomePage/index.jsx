@@ -8,6 +8,8 @@ export const CafeHomePage = () => {
 
     const [coffee, setCoffee] = useState([]); 
     const [filteredCoffee, setFilteredCoffee] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     const [searchString, setSearchString] = useState('');
 
     const globalState = useContext(CoffeeOrderContext);
@@ -55,11 +57,13 @@ export const CafeHomePage = () => {
             console.log(formattedData);
             setCoffee(formattedData);
             setFilteredCoffee(formattedData);
-            globalState.initializeCoffee(formattedData); 
+            globalState.initializeCoffee(formattedData);
+            setLoading(false); 
 
 
         } catch(err) {
             console.log (err)
+            setLoading(false);
         }
     }
 
@@ -81,7 +85,11 @@ export const CafeHomePage = () => {
              ))
            }
            {
-               filteredCoffee.length === 0 && <p>Nothing found for {searchString}!</p>
+              !loading && filteredCoffee.length === 0 && <p>Nothing found for {searchString}!</p>
+           }
+
+           {
+               loading && <p>Loading data...</p>
            }
          </div>
      </div>

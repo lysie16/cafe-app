@@ -8,7 +8,7 @@ import { CoffeeOrderContextProvider } from './context/coffeeOrderContext';
 ReactDOM.render(
   <CoffeeOrderContextProvider>
     <App />
-    </CoffeeOrderContextProvider>,
+  </CoffeeOrderContextProvider>,
   document.getElementById('root')
 );
 
