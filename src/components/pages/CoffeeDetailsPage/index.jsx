@@ -12,7 +12,7 @@ export const CoffeeDetailsPage = (props) => {
 
     useEffect ( () => {
         const coffee = globalState.coffee.find(
-            (coffee) => coffee.id.stringValue === id
+            (coffee) => coffee.id?.stringValue === id
         );
         setCoffee(coffee);
     }, [])
@@ -23,6 +23,7 @@ export const CoffeeDetailsPage = (props) => {
                 <h1 className="coffee-title"> {coffee.name?.stringValue}
                 {id} </h1>
                 <img src={coffee.image?.stringValue} alt="coffee-photo" />
+                <p className="coffee-description"> {coffee.desc?.stringValue} </p>
             </div>
         )
     } else {

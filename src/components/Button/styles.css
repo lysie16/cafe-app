@@ -12,7 +12,7 @@ button:disabled:hover {
     outline: 0;
     padding: 12px;
     color: white;
-    background-color: #000;
+    background-color:#4a2c2a;
     text-align: center;
     cursor: pointer;
     width: 100%;
@@ -39,5 +39,5 @@ button:disabled:hover {
 }
 
 .secondary:hover, .primary:hover {
-    opacity: 0.8
+    opacity: 0.8;
 }

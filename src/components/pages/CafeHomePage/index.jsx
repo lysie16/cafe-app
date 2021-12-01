@@ -2,10 +2,13 @@ import "./styles.css";
 import {useEffect, useState, useContext } from 'react';
 import { CoffeeItem } from "../../CoffeeItem";
 import CoffeeOrderContext from "../../../context/coffeeOrderContext";
+import { Search } from '../../Search';
 
 export const CafeHomePage = () => {
 
-    const [coffee, setCoffee] = useState([]);
+    const [coffee, setCoffee] = useState([]); 
+    const [filteredCoffee, setFilteredCoffee] = useState([]);
+    const [searchString, setSearchString] = useState('');
 
     const globalState = useContext(CoffeeOrderContext);
 
@@ -15,9 +18,34 @@ export const CafeHomePage = () => {
         }, []
     );
 
+    useEffect (
+        () => {
+            handleSearchByName();
+        }, [searchString]
+    )
+
+    const handleSearchByName = () => {
+        // id search string was empty, dont filter and show all coffees
+        if(searchString === '') {
+            setFilteredCoffee(coffee);
+            return;
+        }
+
+        //filter
+        const coffeeFiltered = coffee.filter(
+            (coffee) => {
+                const name = coffee.name?.stringValue.toLowerCase();
+                const isMatch = name.indexOf(searchString.trim().toLowerCase());
+
+                return isMatch !== -1; 
+            }
+        )
+        setFilteredCoffee(coffeeFiltered);
+    }
+
     const getCoffee = async() => {
         try {
-            const response = await fetch('https://firestore.googleapis.com/v1/projects/pets-api-40916/databases/(default)/documents/pets');
+            const response = await fetch('https://firestore.googleapis.com/v1/projects/cafe-app-a223b/databases/(default)/documents/coffee');
             const data = await response.json();
             console.log(data);
             const formattedData = data.documents.map((item) => {
@@ -26,7 +54,8 @@ export const CafeHomePage = () => {
 
             console.log(formattedData);
             setCoffee(formattedData);
-            globalState.initializeCoffee(formattedData);
+            setFilteredCoffee(formattedData);
+            globalState.initializeCoffee(formattedData); 
 
 
         } catch(err) {
@@ -34,17 +63,25 @@ export const CafeHomePage = () => {
         }
     }
 
+    const handleSearchUpdate = (event) => {
+        setSearchString(event.target.value);
+    }
+
     return (
         <div className="coffee-page">
+            {searchString}
         <h1 className="coffee-title">All Coffee</h1>
+        <Search handleSearchUpdate={handleSearchUpdate} />
          <div className="coffee-container">
             { 
-            coffee.map( (coffee) => (
-                 <CoffeeItem key={coffee.id.stringValue} image={coffee.image.stringValue} name={coffee.name.stringValue} id={coffee.id.stringValue}>
-                     {/* change these in the API (cafe-app) // size={coffee.size.stringValue} price={coffee.price.stringValue}  type={coffee.coffeeType.stringValue}*/}
-
+            filteredCoffee.map( (coffee) => (
+                 <CoffeeItem key={coffee.id?.stringValue} image={coffee.image?.stringValue} name={coffee.name?.stringValue} id={coffee.id?.stringValue}
+                  size={coffee.size?.stringValue} price={coffee.price?.stringValue}  type={coffee.coffeeType?.stringValue}>
                  </CoffeeItem>
              ))
+           }
+           {
+               filteredCoffee.length === 0 && <p>Nothing found for {searchString}!</p>
            }
          </div>
      </div>
